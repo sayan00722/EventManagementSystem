@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel hero-blue">
+    <h2 class="banner light">Welcome Vendor</h2>
+    <div class="grid-4 dashboard-main-actions">
+        <a class="btn btn-light" href="{{ url_for('vendor.items') }}">Your Item</a>
+        <a class="btn btn-light" href="{{ url_for('vendor.items') }}">Add New Item</a>
+        <a class="btn btn-light" href="{{ url_for('vendor.transactions') }}">Transaction</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-light" type="submit">LogOut</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

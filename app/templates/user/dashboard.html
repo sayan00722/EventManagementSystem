@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+        <div class="portal-main">
+            <div class="row-between">
+                <a class="btn btn-outline" href="{{ url_for('user.dashboard') }}">Home</a>
+                <form method="post" action="{{ url_for('auth.logout') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-outline" type="submit">LogOut</button>
+                </form>
+            </div>
+
+            <h2 class="banner">WELCOME USER</h2>
+
+            <div class="grid-4 spaced-top">
+                <a class="btn btn-primary" href="{{ url_for('user.vendors') }}">Vendor</a>
+                <a class="btn btn-primary" href="{{ url_for('user.cart') }}">Cart</a>
+                <a class="btn btn-primary" href="{{ url_for('user.guest_list') }}">Guest List</a>
+                <a class="btn btn-primary" href="{{ url_for('user.order_status') }}">Order Status</a>
+            </div>
+
+            <div class="grid-3 spaced-top">
+                <a class="btn btn-light" href="{{ url_for('user.reports') }}">Reports</a>
+                <a class="btn btn-light" href="{{ url_for('user.transactions') }}">Transactions</a>
+                <a class="btn btn-light" href="{{ url_for('user.membership') }}">Membership</a>
+            </div>
+
+            <div class="center spaced-top">
+                <form method="post" action="{{ url_for('auth.logout') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-primary" type="submit">LogOut</button>
+                </form>
+            </div>
+        </div>
+</section>
+{% endblock %}

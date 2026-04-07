@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('vendor.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <div class="split-grid spaced-top">
+        <form method="post" class="card form-grid vendor-add-form" autocomplete="off">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <h3>Add Product</h3>
+            <label>Product Name</label>
+            <input name="name" required placeholder="e.g. Garden Ambient Lights">
+            <label>Product Price</label>
+            <input name="price" type="number" step="0.01" min="0" required placeholder="e.g. 4500">
+            <label>Product Image URL</label>
+            <input name="image" placeholder="Paste Pexels image URL">
+            <button class="btn btn-primary" type="submit">Add Product</button>
+        </form>
+
+        <div class="vendor-items-table-wrap">
+            <table class="table vendor-items-table">
+                <thead><tr><th>Image</th><th>Name</th><th>Price</th><th>Action</th></tr></thead>
+                <tbody>
+                    {% for p in products %}
+                    <tr>
+                        <td>
+                            <div class="vendor-image-cell">
+                                <img src="{{ p.image or 'https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg' }}" alt="{{ p.name }}" class="vendor-thumb">
+                                <a href="{{ p.image or '#' }}" target="_blank" rel="noopener" class="vendor-link">View</a>
+                            </div>
+                        </td>
+                        <td class="vendor-name-cell">{{ p.name }}</td>
+                        <td class="vendor-price-cell">Rs {{ p.price }}</td>
+                        <td>
+                            <form method="post" action="{{ url_for('vendor.update_item', product_id=p.id) }}" class="vendor-inline-edit">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input name="name" value="{{ p.name }}" required placeholder="Name">
+                                <input name="price" value="{{ p.price }}" type="number" step="0.01" required placeholder="Price">
+                                <input name="image" value="{{ p.image }}" placeholder="Image URL">
+                                <button class="btn btn-light btn-sm" type="submit">Update</button>
+                            </form>
+                            <form method="post" action="{{ url_for('vendor.delete_item', product_id=p.id) }}" class="vendor-delete-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

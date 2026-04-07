@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel narrow">
+    <h2 class="banner">CheckOut</h2>
+    <p class="center">Total Amount: {{ grand_total }}</p>
+
+    <form method="post" class="form-grid card">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Name</label><input name="customer_name" required>
+        <label>Number</label><input name="customer_number" required>
+        <label>E-mail</label><input type="email" name="customer_email" required>
+        <label>Payment Method</label>
+        <select name="payment_method" required>
+            <option>Cash</option>
+            <option>UPI</option>
+        </select>
+        <label>Address</label><input name="customer_address" required>
+        <label>State</label><input name="customer_state" required>
+        <label>City</label><input name="customer_city" required>
+        <label>Pin Code</label><input name="customer_pincode" required>
+        <button class="btn btn-primary" type="submit">Order Now</button>
+    </form>
+</section>
+{% endblock %}

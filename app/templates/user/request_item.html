@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('user.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <h2 class="banner">Request Item</h2>
+
+    <form method="post" class="card form-grid">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Vendor</label>
+        <select name="vendor_id" required>
+            {% for v in vendors %}
+            <option value="{{ v.id }}">{{ v.name }} - {{ v.category }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Item Name</label>
+        <input name="item_name" required>
+
+        <label>Note</label>
+        <textarea name="note"></textarea>
+
+        <button class="btn btn-primary" type="submit">Submit Request</button>
+    </form>
+</section>
+{% endblock %}

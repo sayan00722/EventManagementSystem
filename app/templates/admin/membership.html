@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('admin.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <h2 class="banner">Membership</h2>
+
+    <div class="grid-2">
+        <form method="post" class="card form-grid">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="add">
+            <h3>Add Membership</h3>
+            <label>User ID</label>
+            <select name="user_id" required>
+                <option value="">Select User ID</option>
+                {% for u in users %}
+                <option value="{{ u.id }}">{{ u.id }} - {{ u.name }} ({{ u.email }})</option>
+                {% endfor %}
+            </select>
+            <label>Duration</label>
+            <select name="duration">
+                <option selected>6 months</option>
+                <option>1 year</option>
+                <option>2 years</option>
+            </select>
+            <button class="btn btn-primary" type="submit">Add</button>
+        </form>
+
+        <form method="post" class="card form-grid">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="update">
+            <h3>Update Membership</h3>
+            <label>Load Membership</label>
+            <div class="inline-form">
+                <select form="membership-lookup" name="membership_id" id="membership_id_lookup" required>
+                    <option value="">Select Membership</option>
+                    {% for r in records %}
+                    <option value="{{ r.id }}" {% if membership_to_edit and membership_to_edit.id == r.id %}selected{% endif %}>{{ r.id }} - User {{ r.user_id }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-light" form="membership-lookup" type="submit">Auto-fill</button>
+            </div>
+            <label>Membership ID</label>
+            <input type="number" name="membership_id" value="{{ membership_to_edit.id if membership_to_edit else '' }}" required>
+            <label>User ID</label>
+            <select name="user_id" required>
+                <option value="">Select User ID</option>
+                {% for u in users %}
+                <option value="{{ u.id }}" {% if membership_to_edit and membership_to_edit.user_id == u.id %}selected{% endif %}>{{ u.id }} - {{ u.name }}</option>
+                {% endfor %}
+            </select>
+            <label>Extension</label>
+            <select name="duration">
+                <option {% if not membership_to_edit or membership_to_edit.duration == '6 months' %}selected{% endif %}>6 months</option>
+                <option {% if membership_to_edit and membership_to_edit.duration == '1 year' %}selected{% endif %}>1 year</option>
+                <option {% if membership_to_edit and membership_to_edit.duration == '2 years' %}selected{% endif %}>2 years</option>
+            </select>
+            <button class="btn btn-primary" type="submit">Update</button>
+        </form>
+
+        <form id="membership-lookup" method="get" action="{{ url_for('admin.membership') }}"></form>
+    </div>
+
+    <form method="post" class="card form-grid spaced-top">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="revoke">
+        <h3>Revoke Membership</h3>
+        <label>Membership ID</label>
+        <select name="membership_id" required>
+            <option value="">Select Membership</option>
+            {% for r in records %}
+            <option value="{{ r.id }}">{{ r.id }} - User {{ r.user_id }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-danger" type="submit">Revoke</button>
+    </form>
+
+    <table class="table spaced-top">
+        <thead><tr><th>ID</th><th>User</th><th>Duration</th><th>Start</th><th>End</th></tr></thead>
+        <tbody>
+            {% for r in records %}
+            <tr><td>{{ r.id }}</td><td>{{ r.user_id }}</td><td>{{ r.duration }}</td><td>{{ r.start_date }}</td><td>{{ r.end_date }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('user.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <h2 class="banner">Guest List</h2>
+
+    <form method="post" class="card form-grid">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="add">
+        <label>Name</label><input name="name" required>
+        <label>Email</label><input type="email" name="email">
+        <label>Address</label><input name="address">
+        <button class="btn btn-primary" type="submit">Add</button>
+    </form>
+
+    <table class="table spaced-top">
+        <thead><tr><th>Name</th><th>E-mail</th><th>Address</th><th>Update</th><th>Delete</th></tr></thead>
+        <tbody>
+            {% for g in guests %}
+            <tr>
+                <td>{{ g.name }}</td><td>{{ g.email }}</td><td>{{ g.address }}</td>
+                <td>
+                    <form method="post" class="inline-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="action" value="update">
+                        <input type="hidden" name="guest_id" value="{{ g.id }}">
+                        <input name="name" value="{{ g.name }}">
+                        <input name="email" value="{{ g.email }}">
+                        <input name="address" value="{{ g.address }}">
+                        <button class="btn btn-light" type="submit">Update</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" class="inline-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="guest_id" value="{{ g.id }}">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

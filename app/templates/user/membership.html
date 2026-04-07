@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('user.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <h2 class="banner">Membership Management</h2>
+
+    {% if membership %}
+    <div class="grid-2">
+        <form method="post" class="card form-grid">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="update">
+            <h3>Update Membership</h3>
+            <label>Membership Number</label>
+            <input value="{{ membership.id }}" readonly>
+
+            <label>Extension</label>
+            <select name="duration" id="user_membership_extension" required>
+                <option selected>6 months</option>
+                <option>1 year</option>
+                <option>2 years</option>
+            </select>
+
+            <label>New End Date (After Extension)</label>
+            <input id="user_membership_end_projected" readonly>
+
+            <button class="btn btn-primary" type="submit">Extend Membership</button>
+        </form>
+
+        <div class="card form-grid" id="user_membership_data"
+            data-start="{{ membership.start_date.strftime('%Y-%m-%d') if membership.start_date else '' }}"
+            data-end="{{ membership.end_date.strftime('%Y-%m-%d') if membership.end_date else '' }}"
+            data-duration="{{ membership.duration }}">
+            <h3>Current Membership Details</h3>
+            <label>Current Duration</label>
+            <input id="user_membership_duration_current" value="{{ membership.duration }}" readonly>
+            <label>Start Date</label>
+            <input id="user_membership_start" value="{{ membership.start_date.strftime('%Y-%m-%d') if membership.start_date else '' }}" readonly>
+            <label>End Date</label>
+            <input id="user_membership_end" value="{{ membership.end_date.strftime('%Y-%m-%d') if membership.end_date else '' }}" readonly>
+
+            <form method="post" class="spaced-top">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="action" value="revoke">
+                <button class="btn btn-danger" type="submit">Cancel Membership</button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="card center">
+        <p>No membership found for your account.</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

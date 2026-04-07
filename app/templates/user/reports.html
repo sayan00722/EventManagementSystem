@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('user.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <h2 class="banner">User Reports</h2>
+
+    <div class="grid-3">
+        <div class="card center">
+            <h3>Total Orders</h3>
+            <p>{{ total_orders }}</p>
+        </div>
+        <div class="card center">
+            <h3>Total Spend</h3>
+            <p>Rs {{ total_spend }}</p>
+        </div>
+        <div class="card center">
+            <h3>Current Pipeline</h3>
+            <p>Received: {{ status_count['Received'] }}</p>
+            <p>Ready: {{ status_count['Ready for Shipping'] }}</p>
+            <p>Out: {{ status_count['Out for Delivery'] }}</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

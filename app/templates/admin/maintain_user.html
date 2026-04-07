@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('admin.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <h2 class="banner">Maintain User</h2>
+
+    <div class="grid-2">
+        <form method="post" class="card form-grid" autocomplete="off">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="add">
+            <h3>Add User</h3>
+            <label>Name</label>
+            <input name="name" required>
+            <label>Email</label>
+            <input type="email" name="email" required>
+            <label>Password</label>
+            <div class="input-with-action">
+                <input id="add_user_password" type="password" name="password" required>
+                <button class="btn btn-light btn-sm toggle-password" type="button" data-target="add_user_password">Show</button>
+            </div>
+            <button class="btn btn-primary" type="submit">Add</button>
+        </form>
+
+        <form method="post" class="card form-grid" autocomplete="off" id="update-user-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="update">
+            <h3>Update User</h3>
+            <label>User ID</label>
+            <select name="user_id" id="update_user_id" required>
+                <option value="">Select User ID</option>
+                {% for user in users %}
+                <option value="{{ user.id }}" data-name="{{ user.name }}" data-email="{{ user.email }}">{{ user.id }} - {{ user.name }}</option>
+                {% endfor %}
+            </select>
+            <label>Name</label>
+            <input name="name" id="update_user_name">
+            <label>Email</label>
+            <input type="email" name="email" id="update_user_email">
+            <label>New Password</label>
+            <div class="input-with-action">
+                <input id="update_user_password" type="password" name="new_password" placeholder="Leave blank to keep current">
+                <button class="btn btn-light btn-sm toggle-password" type="button" data-target="update_user_password">Show</button>
+            </div>
+            <button class="btn btn-primary" type="submit">Update</button>
+        </form>
+    </div>
+
+    <form method="post" class="card form-grid spaced-top" autocomplete="off">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="delete">
+        <h3>Delete User</h3>
+        <label>User ID</label>
+        <select name="user_id" required>
+            <option value="">Select User ID</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.id }} - {{ user.name }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-danger" type="submit">Delete User</button>
+    </form>
+
+    <table class="table spaced-top">
+        <thead><tr><th>ID</th><th>Name</th><th>Email</th></tr></thead>
+        <tbody>
+            {% for user in users %}
+            <tr><td>{{ user.id }}</td><td>{{ user.name }}</td><td>{{ user.email }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel narrow">
+    <h2 class="center">THANK YOU</h2>
+    <div class="banner">Total Amount: {{ order.total }}</div>
+    <div class="grid-2 spaced-top">
+        <div class="card center"><strong>Name</strong><p>{{ order.customer_name }}</p></div>
+        <div class="card center"><strong>Number</strong><p>{{ order.customer_number }}</p></div>
+        <div class="card center"><strong>E-mail</strong><p>{{ order.customer_email }}</p></div>
+        <div class="card center"><strong>Payment Method</strong><p>{{ txn.payment_method if txn else '' }}</p></div>
+        <div class="card center"><strong>Address</strong><p>{{ order.customer_address }}</p></div>
+        <div class="card center"><strong>State</strong><p>{{ order.customer_state }}</p></div>
+        <div class="card center"><strong>City</strong><p>{{ order.customer_city }}</p></div>
+        <div class="card center"><strong>PinCode</strong><p>{{ order.customer_pincode }}</p></div>
+    </div>
+    <a class="btn btn-primary wide spaced-top" href="{{ url_for('user.vendors') }}">Continue Shopping</a>
+</section>
+{% endblock %}

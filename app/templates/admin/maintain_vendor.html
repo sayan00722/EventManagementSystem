@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('admin.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <h2 class="banner">Maintain Vendor</h2>
+
+    <div class="grid-2">
+        <form method="post" class="card form-grid" autocomplete="off">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="add">
+            <h3>Add Vendor</h3>
+            <label>Name</label>
+            <input name="name" required>
+            <label>Email</label>
+            <input type="email" name="email" required>
+            <label>Password</label>
+            <div class="input-with-action">
+                <input id="add_vendor_password" type="password" name="password" required>
+                <button class="btn btn-light btn-sm toggle-password" type="button" data-target="add_vendor_password">Show</button>
+            </div>
+            <label>Category</label>
+            <select name="category"><option>Catering</option><option>Florist</option><option>Decoration</option><option>Lighting</option></select>
+            <label>Contact</label>
+            <input name="contact" required>
+            <label>Items Sold (one or many)</label>
+            <div class="tag-input" data-tag-input>
+                <div class="tag-list" data-tag-list></div>
+                <input type="hidden" name="sell_items" data-tag-hidden>
+                <input type="text" data-tag-text placeholder="Type item and press comma (e.g. flowers, perfumes, fish)">
+            </div>
+            <button class="btn btn-primary" type="submit">Add</button>
+        </form>
+
+        <form method="post" class="card form-grid" autocomplete="off" id="update-vendor-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="update">
+            <h3>Update Vendor</h3>
+            <label>Vendor ID</label>
+            <select name="vendor_id" id="update_vendor_id" required>
+                <option value="">Select Vendor ID</option>
+                {% for v in vendors %}
+                {% set linked_user = vendor_users.get(v.user_id) %}
+                <option
+                    value="{{ v.id }}"
+                    data-name="{{ v.name }}"
+                    data-email="{{ linked_user.email if linked_user else '' }}"
+                    data-category="{{ v.category }}"
+                    data-contact="{{ v.contact }}"
+                    data-sell-items="{{ v.sell_items or '' }}"
+                >{{ v.id }} - {{ v.name }}</option>
+                {% endfor %}
+            </select>
+            <label>Name</label>
+            <input name="name" id="update_vendor_name">
+            <label>Email</label>
+            <input type="email" name="email" id="update_vendor_email">
+            <label>Category</label>
+            <select name="category" id="update_vendor_category"><option>Catering</option><option>Florist</option><option>Decoration</option><option>Lighting</option></select>
+            <label>Contact</label>
+            <input name="contact" id="update_vendor_contact">
+            <label>Items Sold (one or many)</label>
+            <div class="tag-input" id="update_vendor_items" data-tag-input>
+                <div class="tag-list" data-tag-list></div>
+                <input type="hidden" name="sell_items" data-tag-hidden>
+                <input type="text" data-tag-text placeholder="Type item and press comma (e.g. mutton, chicken, xyz)">
+            </div>
+            <label>New Password</label>
+            <div class="input-with-action">
+                <input id="update_vendor_password" type="password" name="new_password" placeholder="Leave blank to keep current">
+                <button class="btn btn-light btn-sm toggle-password" type="button" data-target="update_vendor_password">Show</button>
+            </div>
+            <button class="btn btn-primary" type="submit">Update</button>
+        </form>
+    </div>
+
+    <form method="post" class="card form-grid spaced-top" autocomplete="off">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="delete">
+        <h3>Delete Vendor</h3>
+        <label>Vendor ID</label>
+        <select name="vendor_id" required>
+            <option value="">Select Vendor ID</option>
+            {% for v in vendors %}
+            <option value="{{ v.id }}">{{ v.id }} - {{ v.name }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-danger" type="submit">Delete Vendor</button>
+    </form>
+
+    <table class="table spaced-top">
+        <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Contact</th><th>Items Sold</th></tr></thead>
+        <tbody>
+            {% for v in vendors %}
+            <tr><td>{{ v.id }}</td><td>{{ v.name }}</td><td>{{ v.category }}</td><td>{{ v.contact }}</td><td>{{ v.sell_items or '-' }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

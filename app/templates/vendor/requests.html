@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('vendor.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <h2 class="banner">Request Item</h2>
+    <div class="grid-4 cards-grid spaced-top">
+        {% for r in requests %}
+        <div class="card center"><h3>{{ r.item_name }}</h3><p>{{ r.note }}</p><p>User #{{ r.requested_by }}</p></div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

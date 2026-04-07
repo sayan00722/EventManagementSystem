@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel auth-panel">
+    <h1 class="banner">Event Management System</h1>
+    <h2>{{ role|capitalize }} Signup</h2>
+    <form method="post" class="form-grid">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Name</label>
+        <input name="name" required>
+        <label>Email</label>
+        <input name="email" type="email" required>
+        <label>Password</label>
+        <input name="password" type="password" required minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}">
+
+        {% if role == 'vendor' %}
+        <label>Category</label>
+        <select name="category">
+            <option>Catering</option>
+            <option>Florist</option>
+            <option>Decoration</option>
+            <option>Lighting</option>
+        </select>
+        <label>Contact</label>
+        <input name="contact" required>
+        {% endif %}
+
+        <div class="action-row">
+            <a class="btn btn-muted" href="{{ url_for('auth.login_selector') }}">Cancel</a>
+            <button class="btn btn-primary" type="submit">Sign Up</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

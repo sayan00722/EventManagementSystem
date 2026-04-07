@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('vendor.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <h2 class="banner">Update</h2>
+
+    <form method="post" class="card form-grid">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Order ID</label>
+        <select name="order_id" required>
+            <option value="">Select Order ID</option>
+            {% for o in orders %}
+            <option value="{{ o.id }}">{{ o.id }} - {{ o.customer_name }}</option>
+            {% endfor %}
+        </select>
+        <label>Status</label>
+        <label><input type="radio" name="status" value="Received" checked> Received</label>
+        <label><input type="radio" name="status" value="Ready for Shipping"> Ready for Shipping</label>
+        <label><input type="radio" name="status" value="Out for Delivery"> Out for Delivery</label>
+        <button class="btn btn-primary" type="submit">Update</button>
+    </form>
+
+    <table class="table spaced-top">
+        <thead><tr><th>Order</th><th>User</th><th>Status</th></tr></thead>
+        <tbody>
+            {% for o in orders %}
+            <tr><td>{{ o.id }}</td><td>{{ o.user_id }}</td><td>{{ o.status }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

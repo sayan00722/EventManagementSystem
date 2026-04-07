@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('user.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+
+    <form class="banner" method="get">
+        <label>Vendor Category</label>
+        <select name="category" onchange="this.form.submit()">
+            <option {% if category=='Catering' %}selected{% endif %}>Catering</option>
+            <option {% if category=='Florist' %}selected{% endif %}>Florist</option>
+            <option {% if category=='Decoration' %}selected{% endif %}>Decoration</option>
+            <option {% if category=='Lighting' %}selected{% endif %}>Lighting</option>
+        </select>
+    </form>
+
+    <div class="grid-3 cards-grid spaced-top">
+        {% for vendor in vendors %}
+        <div class="card product-card vendor-shop-card">
+            <h3>{{ vendor.name }}</h3>
+            <p class="muted">Category: {{ vendor.category }}</p>
+            <p class="muted">Contact: {{ vendor.contact }}</p>
+            <p class="muted">Items sold: {{ vendor.sell_items or 'General services' }}</p>
+
+            {% for p in vendor.products %}
+                <div class="shop-item-row">
+                    <div class="shop-item-info">
+                        <img class="shop-thumb" src="{{ p.image or 'https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg' }}" alt="{{ p.name }}">
+                        <div>
+                            <strong>{{ p.name }}</strong>
+                            <p>Rs {{ p.price }}</p>
+                        </div>
+                    </div>
+                    <form method="post" action="{{ url_for('user.add_to_cart', product_id=p.id) }}" class="shop-add-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <select name="quantity" aria-label="Quantity for {{ p.name }}">
+                            {% for n in range(1, 11) %}
+                            <option value="{{ n }}">{{ n }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-light" type="submit">Add to Cart</button>
+                    </form>
+                </div>
+            {% else %}
+                <button class="btn btn-light" type="button" disabled>No Item</button>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

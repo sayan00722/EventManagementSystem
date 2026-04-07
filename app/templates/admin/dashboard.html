@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('admin.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+    <h2 class="banner">Welcome Admin</h2>
+
+    <div class="grid-2 spaced-top">
+        <a class="btn btn-primary" href="{{ url_for('admin.maintain_user') }}">Maintain User</a>
+        <a class="btn btn-primary" href="{{ url_for('admin.maintain_vendor') }}">Maintain Vendor</a>
+    </div>
+
+    <div class="grid-3 spaced-top">
+        <a class="btn btn-light" href="{{ url_for('admin.membership') }}">Membership</a>
+        <a class="btn btn-light" href="{{ url_for('admin.reports') }}">Reports</a>
+        <a class="btn btn-light" href="{{ url_for('admin.transactions') }}">Transactions</a>
+    </div>
+</section>
+{% endblock %}

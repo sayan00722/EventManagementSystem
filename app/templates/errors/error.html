@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel narrow center">
+    <h1>{{ code }}</h1>
+    <p>{{ message }}</p>
+    {% if safe_target %}
+    <a class="btn btn-primary" href="{{ safe_target }}">Go to Safe Page</a>
+    {% else %}
+    <a class="btn btn-primary" href="{{ url_for('auth.login_selector') }}">Go to Login</a>
+    {% endif %}
+</section>
+{% endblock %}

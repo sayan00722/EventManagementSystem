@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('admin.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+    <h2 class="banner">Product Status / Transactions</h2>
+    <table class="table">
+        <thead><tr><th>Order</th><th>Total</th><th>Status</th><th>Payment</th><th>Update</th></tr></thead>
+        <tbody>
+            {% for t in items %}
+            <tr>
+                <td>{{ t.order_id }}</td>
+                <td>{{ t.order.total }}</td>
+                <td>{{ t.order.status }}</td>
+                <td>{{ t.payment_method }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('admin.update_order_status', order_id=t.order_id) }}" class="inline-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <label><input type="radio" name="status" value="Received" {% if t.order.status == 'Received' %}checked{% endif %}>Received</label>
+                        <label><input type="radio" name="status" value="Ready for Shipping" {% if t.order.status == 'Ready for Shipping' %}checked{% endif %}>Ready</label>
+                        <label><input type="radio" name="status" value="Out for Delivery" {% if t.order.status == 'Out for Delivery' %}checked{% endif %}>Out</label>
+                        <button class="btn btn-light" type="submit">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

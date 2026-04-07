@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel narrow">
+    <h1 class="page-title">Event Management System</h1>
+    <div class="grid-3">
+        <a class="btn btn-primary" href="{{ url_for('auth.admin_login') }}">Admin Login</a>
+        <a class="btn btn-primary" href="{{ url_for('auth.user_login') }}">User Login</a>
+        <a class="btn btn-primary" href="{{ url_for('auth.vendor_login') }}">Vendor Login</a>
+    </div>
+    <div class="grid-3 mt-2">
+        <a class="btn btn-light" href="{{ url_for('auth.signup', role='admin') }}">Admin Signup</a>
+        <a class="btn btn-light" href="{{ url_for('auth.signup', role='user') }}">User Signup</a>
+        <a class="btn btn-light" href="{{ url_for('auth.signup', role='vendor') }}">Vendor Signup</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="panel">
+    <div class="row-between">
+        <a class="btn btn-outline" href="{{ url_for('vendor.dashboard') }}">Home</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline" type="submit">LogOut</button>
+        </form>
+    </div>
+    <h2 class="banner">Transactions</h2>
+    <table class="table">
+        <thead><tr><th>Order</th><th>Total</th><th>Payment</th><th>Status</th></tr></thead>
+        <tbody>
+            {% for order, txn in order_items %}
+            <tr><td>{{ order.id }}</td><td>{{ order.total }}</td><td>{{ txn.payment_method }}</td><td>{{ order.status }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
