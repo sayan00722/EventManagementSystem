@@ -7,10 +7,8 @@ services:
     startCommand: gunicorn run:app
     autoDeploy: true
     envVars:
-      - key: FLASK_APP
-        value: run.py
-      - key: FLASK_ENV
-        value: production
+      - key: FLASK_DEBUG
+        value: false
       - key: SECRET_KEY
         sync: false
       - key: DATABASE_URL
