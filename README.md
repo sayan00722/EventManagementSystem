@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Event Management System
 
 Simple role-based Event Management web app built with Flask and MySQL.
@@ -75,6 +74,5 @@ Open: http://127.0.0.1:5001
 
 - Hosted on Render
 - Uses external MySQL database (Aiven)
-=======
 Hosted Website Link : https://eventmanagementsystem-1-jjdk.onrender.com/
 >>>>>>> 2928a42703b8da22883bf331783d86463933748e
