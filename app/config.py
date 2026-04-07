@@ -13,6 +13,14 @@ class Config:
     SQLALCHEMY_DATABASE_URI = _raw_db_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    _mysql_ssl_enabled = os.getenv("MYSQL_SSL", "false").strip().lower() in {"1", "true", "yes", "on"}
+    _mysql_ssl_ca = os.getenv("MYSQL_SSL_CA", "").strip()
+    if _mysql_ssl_enabled and SQLALCHEMY_DATABASE_URI.startswith("mysql+pymysql://"):
+        if _mysql_ssl_ca:
+            SQLALCHEMY_ENGINE_OPTIONS = {"connect_args": {"ssl": {"ca": _mysql_ssl_ca}}}
+        else:
+            SQLALCHEMY_ENGINE_OPTIONS = {"connect_args": {"ssl": {}}}
+
     DEBUG = os.getenv("FLASK_ENV", "development") == "development"
 
     SESSION_COOKIE_HTTPONLY = True
