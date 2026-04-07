@@ -240,6 +240,78 @@ Tail logs:
 Get-Content .\logs\event_management.log -Wait
 ```
 
+## Deploy on Render
+
+This project can be deployed as a Python Web Service on Render.
+
+Important:
+
+- Render does not provide managed MySQL in the standard setup.
+- Use an external MySQL provider (for example: Railway MySQL, Aiven MySQL, PlanetScale, or your own hosted MySQL).
+- Set DATABASE_URL in SQLAlchemy format:
+  - mysql+pymysql://USER:PASSWORD@HOST:3306/DB_NAME
+
+### Option A: Deploy using render.yaml (recommended)
+
+The repository includes render.yaml. Steps:
+
+1. Push your latest code to GitHub.
+2. In Render dashboard, click New + -> Blueprint.
+3. Connect your GitHub repo and select this project.
+4. Render will detect render.yaml and create the web service.
+5. In Render service settings, set secret env vars:
+
+- SECRET_KEY = any long random string
+- DATABASE_URL = mysql+pymysql://... (external MySQL URL)
+
+6. Trigger deploy.
+
+### Option B: Manual Web Service setup
+
+1. In Render dashboard, click New + -> Web Service.
+2. Connect GitHub repo and choose branch.
+3. Configure:
+
+- Environment: Python
+- Build Command: pip install -r requirements.txt
+- Start Command: gunicorn run:app
+
+4. Add environment variables:
+
+- FLASK_APP = run.py
+- FLASK_ENV = production
+- SECRET_KEY = any long random string
+- DATABASE_URL = mysql+pymysql://USER:PASSWORD@HOST:3306/DB_NAME
+
+5. Click Create Web Service.
+
+### First deploy checklist
+
+1. Ensure database schema exists before first production login:
+
+- Run sql/schema.sql on your MySQL database.
+
+2. Optional demo data:
+
+- Run sql/seed.sql and sql/dummy_data.sql on the same database.
+
+3. Redeploy service after DB is ready.
+
+### Common Render issues
+
+1. Build fails with "gunicorn: command not found"
+
+- Ensure requirements.txt includes gunicorn.
+
+2. App starts but DB errors occur
+
+- Check DATABASE_URL format uses mysql+pymysql://
+- Verify DB host allows connections from Render.
+
+3. Static/templates not loading
+
+- Confirm start command is exactly: gunicorn run:app
+
 ## Security Notes
 
 - Passwords are hashed with bcrypt.
