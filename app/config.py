@@ -2,11 +2,15 @@ import os
 
 
 class Config:
-    SECRET_KEY = os.getenv("SECRET_KEY", "sayan_secret_event_2026")
-    SQLALCHEMY_DATABASE_URI = os.getenv(
+    _raw_db_url = os.getenv(
         "DATABASE_URL",
         "mysql+pymysql://root:sayan1234@localhost:3306/event_management",
     )
+    if _raw_db_url.startswith("mysql://"):
+        _raw_db_url = _raw_db_url.replace("mysql://", "mysql+pymysql://", 1)
+
+    SECRET_KEY = os.getenv("SECRET_KEY", "sayan_secret_event_2026")
+    SQLALCHEMY_DATABASE_URI = _raw_db_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     DEBUG = os.getenv("FLASK_ENV", "development") == "development"
