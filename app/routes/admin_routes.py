@@ -27,23 +27,37 @@ def _normalize_sell_items(raw_value: str) -> str:
     return ", ".join(cleaned)
 
 
+def _normalize_product_key(value: str) -> str:
+    # Collapse extra spaces and compare names case-insensitively.
+    return " ".join((value or "").strip().split()).lower()
+
+
 def _sync_vendor_products_from_sell_items(vendor: Vendor) -> int:
     if not vendor or not vendor.sell_items:
         return 0
 
-    requested_items = [item.strip() for item in vendor.sell_items.split(",") if item.strip()]
+    requested_items = [" ".join(item.strip().split()) for item in vendor.sell_items.split(",") if item.strip()]
     if not requested_items:
         return 0
 
     existing_names = {
-        product.name.strip().lower()
+        _normalize_product_key(product.name)
         for product in Product.query.filter_by(vendor_id=vendor.id).all()
     }
 
+    requested_unique = []
+    requested_seen = set()
+    for item_name in requested_items:
+        key = _normalize_product_key(item_name)
+        if not key or key in requested_seen:
+            continue
+        requested_seen.add(key)
+        requested_unique.append(item_name)
+
     created = 0
     default_image = "https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg"
-    for item_name in requested_items:
-        key = item_name.lower()
+    for item_name in requested_unique:
+        key = _normalize_product_key(item_name)
         if key in existing_names:
             continue
 
